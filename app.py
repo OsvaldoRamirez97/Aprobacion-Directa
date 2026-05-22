@@ -114,7 +114,6 @@ def ordenar_lista(lista: list, referencias: list) -> list:
     while indice < 0 or indice > len(lista)-1:
         indice = int(input(f'Reingrese un indice valido (0 - {len(lista)-1}): '))
 
-#------------------------------------------------------------ Se hizo muy tarde, continuar desde aca!!! ------------------------------------------------------------
 
     # for i in range(len(lista)):
     #     if lista[0][indice] < 
