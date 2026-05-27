@@ -1,29 +1,23 @@
 # 1)  Importar la lista de pokemones del archivo heroes.py 
 from pokemons import lista_pokemon
 
-'''
-Enunciado/s: 
-    La Liga Pokémon abrió nuevas vacantes para entrenadores e investigadores especializados en análisis de datos. Para ingresar al laboratorio principal, los candidatos deberán resolver una serie de desafíos de programación. 
-    
-    El profesor Oak compartió información confidencial de distintos Pokémon registrados en la Pokédex. Cada Pokémon posee datos como nombre, tipo, altura, peso, nivel, puntos de ataque y región de origen. 
-    
-    El objetivo será resolver los requerimientos que nos soliciten. Los mejores participantes podrán formar parte del equipo oficial de investigación Pokémon. Nos pidieron hacer una aplicación con un menú que contenga las siguientes opciones:
+#Indices
+NOMBRE = 0 
+TIPO = 1 
+ALTURA = 2 
+PESO = 3 
+NIVEL = 4 
+FUERZA_ATAQUE = 5 
+REGION = 6 
 
-Consignas 
-
-Objetivos de Aprobación Directa (Calificación de 6 a 10 puntos): 
-    ● Integración de todos los temas vistos en clase hasta el momento del parcial, sin usar librerías ni recursos externos 
-    ● Que todas las opciones funcionen de manera correcta y el código este escrito siguiendo todas las buenas prácticas de la programación 
-    ● Poder defender con lenguaje fluido y técnico el entregable 
-'''
 
 #2) Listas todos los pokemones de una manera amena para el usuario 
 def formatear_lista(lista: list):
     
     print(f'\nDatos de los pokemones: ')
     for i in range(len(lista)):
-        print(f'\n Nombre: {lista[i][0]} \n Tipo: {lista[i][1]} \n Altura: {lista[i][2]} mts \n Peso: {lista[i][3]} kg \
-            \n Nivel: {lista[i][4]} \n Fuerza: {lista[i][5]} \n Region: {lista[i][6]} \n')
+        print(f'\n Nombre: {lista[i][NOMBRE]} \n Tipo: {lista[i][TIPO]} \n Altura: {lista[i][ALTURA]} mts \n Peso: {lista[i][PESO]} kg \
+            \n Nivel: {lista[i][NIVEL]} \n Fuerza: {lista[i][FUERZA_ATAQUE]} \n Region: {lista[i][REGION]} \n')
 
 
 
@@ -61,23 +55,41 @@ def agregar_pokemon(lista: list):
     fuerza_ataque = comprobar_int('Ingrese la fuerza de su pokemon: ')
     region = comprobar_region()
 
-    nuevo_pokemon = [nombre, tipo, nivel, peso, altura, fuerza_ataque, region]
+    nuevo_pokemon = [nombre, tipo, altura, peso, nivel, fuerza_ataque, region]
 
     lista.append(nuevo_pokemon)
 
-    print(f'\nPokemon agregado: {nuevo_pokemon[0]}!')
+    print(f'\nPokemon agregado: {nuevo_pokemon[NOMBRE]}!')
     formatear_lista(lista)
 
 #4)Eliminar pokémon  por nombre (el usuario ingresa un nombre y lo intenta eliminar de la lista) 
+
+#Buscar pokemon sirve para reducir la cantidad de responsabilidades de la fucion
+
+def buscar_indice(lista: list, campo: int, dato: str) -> int:
+    indice = -1
+
+    for i in range(len(lista)):
+        if lista[i][campo] == dato:
+            indice = i
+            break 
+
+    return indice
+
 def eliminar_pokemon(lista: list):
     formatear_lista(lista)
     nombre = comprobar_str('Ingrese el nombre del pokemon que desea eliminar: ')
-    for i in range(len(lista)):
-        if lista[i][0] == nombre:
-            lista.pop(i)
-            break
+    indice_a_eliminar = buscar_indice(lista, NOMBRE, nombre)
 
-    print(f'El pokemon {nombre} ha sido eliminado: ')
+    while indice_a_eliminar == -1:
+        print('No se encontro el pokemon.')
+        nombre = comprobar_str('Reingrese el nombre del pokemon que desea eliminar: ')
+        indice_a_eliminar = buscar_indice(lista, nombre)
+
+    print(f'El pokemon {lista[indice_a_eliminar][NOMBRE]} ha sido eliminado: ')
+
+    lista.pop(indice_a_eliminar)
+    
     formatear_lista(lista)
 
 #5) Ordenar la lista de pokémons por nombre (alfabéticamente de la Z a la A) 
@@ -87,7 +99,7 @@ def ordenar_lista(lista: list):
 
     for i in range(len(lista) -1) :
         for j in range(i+1, len(lista)):
-            if lista[i][0] > lista[j][0]:
+            if lista[i][NOMBRE] < lista[j][NOMBRE]:
                 aux = lista[i]
                 lista[i] = lista[j]
                 lista[j] = aux
@@ -98,28 +110,33 @@ def ordenar_lista(lista: list):
 
 #6) Ver héroe más pesado de los de tipo agua (poder ver toda la información de manera amena para el usuario sobre el pokémon más pesado dentro de los de tipo agua) 
 
-def ver_mas(lista: list, tipo: str, indice:int):
-    mas_pesado = []
+def filtrar_tipo(lista: list, tipo: str = '') -> list:
+    lista_filtrada = []
+    
+    if tipo == '':
+        lista_filtrada = lista
+    else:
+        for i in range(len(lista)):
+            if lista[i][TIPO] == tipo:
+                lista_filtrada.append(lista[i])
 
-    for i in range(len(lista)):
-        print(lista[i][1])
-        if lista[i][1] == tipo:
-            if mas_pesado == []:
-                mas_pesado = lista[i]
-                print(mas_pesado)
-            elif lista[i][indice] > mas_pesado[indice]:
-                mas_pesado = lista[i]
-                print(mas_pesado)
+    return lista_filtrada
 
-    formatear_lista([mas_pesado])
-    return mas_pesado
+def filtrar_mas_alto(lista: list, indice:int, tipo: str = ''):
+    lista_agua = filtrar_tipo(lista, tipo)
+    pokemon_mas_pesado = lista_agua[0]
 
-# ver_mas(lista_pokemon, 'Agua', 3)
+    for i in range(1, len(lista_agua)):
+        if lista_agua[i][indice] > pokemon_mas_pesado[indice]:
+            pokemon_mas_pesado = lista_agua[i]
+
+    formatear_lista([pokemon_mas_pesado])
+
+
 #7) Ver pokemon con más fuerza de ataque (poder ver toda la información de manera amena para el usuario sobre el pokémon más fuerte) 
 
 def ver_mas_fuerte(lista: list):
-    ver_mas(lista, 'Electrico' and 'Fuego' and 'Planta'and 'Agua' and 'Fantasma' and 'Dragon'and \
-            'Normal' and 'Psiquico' and 'Lucha'and 'Roca'and 'Siniestro' and 'Acero', 5)
+    filtrar_mas_alto(lista, FUERZA_ATAQUE)
     
 #8) Listar sólo los pokemones de una región en particular de una manera amena para el usuario 
 
@@ -128,7 +145,19 @@ def filtrar_por_region(lista: list):
     lista_de_la_region = []
 
     for i in range(len(lista)):
-        if lista[i][6] == region:
+        if lista[i][REGION] == region:
             lista_de_la_region.append(lista[i])
 
     formatear_lista(lista_de_la_region)
+
+def mostrar_menu():
+    print('''
+            1 - Ver lista: Ver todos los pokemones
+            2 - Agregar: Agregar un nuevo pokemon
+            3 - Eliminar: Eliminar un pokemon existente
+            4 - Ordenar: Ordenar pokémons por nombre(Z a la A) 
+            5 - Pesado: Ver pokemon mas pesado tipo Agua
+            6 - Fuerte: Ver pokemon mas fuerte
+            7 - Region: Ver pokemones de una region especifica
+            8 - Salir: Para finalizar menu
+        ''')
