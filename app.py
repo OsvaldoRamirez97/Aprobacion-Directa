@@ -84,8 +84,9 @@ def eliminar_pokemon(lista: list):
     while indice_a_eliminar == -1:
         print('No se encontro el pokemon.')
         nombre = comprobar_str('Reingrese el nombre del pokemon que desea eliminar: ')
-        indice_a_eliminar = buscar_indice(lista, nombre)
+        indice_a_eliminar = buscar_indice(lista, NOMBRE, nombre)
 
+    
     print(f'El pokemon {lista[indice_a_eliminar][NOMBRE]} ha sido eliminado: ')
 
     lista.pop(indice_a_eliminar)
@@ -105,8 +106,6 @@ def ordenar_lista(lista: list):
                 lista[j] = aux
 
     formatear_lista(lista)
-
-
 
 #6) Ver héroe más pesado de los de tipo agua (poder ver toda la información de manera amena para el usuario sobre el pokémon más pesado dentro de los de tipo agua) 
 
@@ -131,7 +130,6 @@ def filtrar_mas_alto(lista: list, indice:int, tipo: str = ''):
             pokemon_mas_pesado = lista_agua[i]
 
     formatear_lista([pokemon_mas_pesado])
-
 
 #7) Ver pokemon con más fuerza de ataque (poder ver toda la información de manera amena para el usuario sobre el pokémon más fuerte) 
 
